@@ -1,0 +1,41 @@
+# This workflow will build a Java project with Ant
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-ant
+
+name: Java CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 19
+      uses: actions/setup-java@v3
+      with:
+        java-version: '19'
+        distribution: 'temurin'
+    - name: Build with Ant
+      run: ant -noinput -buildfile build.xml
+
+    - name: Rodando Programa
+      run: java -cp out Main
+
+    - name: Mensagem de sucesso
+      run: echo DEU GREEEEEEEEEEEEEEEEEEENNNNNNNNNN!!!!!!!!!!!!!!!!!!!!!!!!
+
+    - name: Docker Build & Push Action
+      uses: mr-smithers-excellent/docker-build-push@v6.4
+      with:
+        image: nicolasnakashima/javanativo
+        tags: v1, latest
+        registry: docker.io
+        dockerfile: dockerFile
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
